@@ -1,10 +1,16 @@
 import express from "express";
+import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import pg from "pg";
+import cors from "cors";
 
 const app = express();
 
+app.use(bodyParser.json())
+
 dotenv.config();
+
+app.use(cors()) //enables cors for all requests
 
 const port = process.env.PORT || 3000;
 const { Client } = pg
@@ -18,8 +24,18 @@ const client = new Client({
 
 await client.connect()
  
+app.post("/api/data", async (req,res) => { // This will be the main route to get current data
+  })  
 
+app.post("/api/data/income", async (req,res) => { // This will be the add income route
+  const request = req.body;
+  console.log(request);
+  })  
 
+app.post("/api/data/expense", async (req,res) => { // This will be the expense route
+  const request = req.body;
+  console.log(request);
+  })  
 
 app.get("/test", async (req,res) => {
 
