@@ -53,14 +53,10 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
     const request = req.body;
     console.log(request);
     try {
-      const res = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+      const response = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
       console.log("Database has looked up the 2 dates");
       console.log(res.rows);
-      /*try {
-        res.send(res.rows);
-      } catch (err){
-        console.log("Error sending data to user")
-      }*/
+      res.json(response.rows);
     } catch (err){
       console.log("An Error has occured", err);
     }
@@ -70,14 +66,10 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
     const request = req.body;
     console.log(request);
     try {
-      const res = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+      const response = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
       console.log("Database has looked up the 2 dates");
       console.log(res.rows);
-      /*try {
-        res.send(res.rows);
-      } catch (err){
-        console.log("Error sending data to user")
-      }*/
+      res.json(response.rows);
     } catch (err){
       console.log("An Error has occured", err);
     }
@@ -91,11 +83,9 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
         const resExpense = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
         console.log(resIncome.rows);
         console.log(resExpense.rows);
-        try {
-          res.send(res.rows);
-        } catch (err){
-          console.log("Error sending data to user")
-        }
+        const resInc = resIncome.rows;
+        const resExp = resExpense.rows;
+        res.json({resInc, resExp});
       } catch (err){
         console.log("An Error has occured", err);
       }
