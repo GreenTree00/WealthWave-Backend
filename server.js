@@ -49,7 +49,72 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
   }
   })  
 
-/*app.get("/test", async (req,res) => {         // Save this just to test if the database is down
+  app.post("/api/data/income/period", async (req,res) => { 
+    const request = req.body;
+    console.log(request);
+    try {
+      const res = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+      console.log("Database has looked up the 2 dates");
+      console.log(res.rows);
+      /*try {
+        res.send(res.rows);
+      } catch (err){
+        console.log("Error sending data to user")
+      }*/
+    } catch (err){
+      console.log("An Error has occured", err);
+    }
+    }) 
+
+  app.post("/api/data/expense/period", async (req,res) => { 
+    const request = req.body;
+    console.log(request);
+    try {
+      const res = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+      console.log("Database has looked up the 2 dates");
+      console.log(res.rows);
+      /*try {
+        res.send(res.rows);
+      } catch (err){
+        console.log("Error sending data to user")
+      }*/
+    } catch (err){
+      console.log("An Error has occured", err);
+    }
+    }) 
+
+    app.post("/api/data/income-expense/period", async (req,res) => { 
+      const request = req.body;
+      console.log(request);
+      try {
+        const resIncome = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+        const resExpense = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+        console.log(resIncome.rows);
+        console.log(resExpense.rows);
+        try {
+          res.send(res.rows);
+        } catch (err){
+          console.log("Error sending data to user")
+        }
+      } catch (err){
+        console.log("An Error has occured", err);
+      }
+      }) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      /*app.get("/test", async (req,res) => {         // Save this just to test if the database is down
 
   try {
     const res = await client.query('SELECT * FROM testing WHERE id = $1', [1])
