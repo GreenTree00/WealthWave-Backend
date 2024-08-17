@@ -24,7 +24,16 @@ const client = new Client({
 
 await client.connect()
  
-app.post("/api/data", async (req,res) => { // This will be the main route to get current data for graphs
+app.post("/api/data", async (req,res) => { // This will be the route that is called when the page is first opened. It will display the current income for past year
+  const request = req.body;
+  console.log(request);
+  let currentYear = new Date().getFullYear();
+  try {
+    const res = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [currentYear, currentYear]);
+    console.log("Income has been added into the database");
+  } catch (err){
+    console.log("An Error has occured", err);
+  }
   })  
 
 app.post("/api/data/income", async (req,res) => { // This will be the add income route
@@ -55,7 +64,8 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
     try {
       const response = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
       console.log("Database has looked up the 2 dates");
-      console.log(res.rows);
+      console.log("Data returned from database");
+      console.log(response.rows);
       res.json(response.rows);
     } catch (err){
       console.log("An Error has occured", err);
@@ -68,6 +78,7 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
     try {
       const response = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
       console.log("Database has looked up the 2 dates");
+      console.log("Data returned from database");
       console.log(res.rows);
       res.json(response.rows);
     } catch (err){
