@@ -24,13 +24,16 @@ const client = new Client({
 
 await client.connect()
  
-app.post("/api/data", async (req,res) => { // This will be the route that is called when the page is first opened. It will display the current income for past year
-  const request = req.body;
-  console.log(request);
-  let currentYear = new Date().getFullYear();
+app.get("/api/data", async (req,res) => { // This will be the route that is called when the page is first opened. It will display that last total income and total expense entered into the app
+  
   try {
-    const res = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [currentYear, currentYear]);
-    console.log("Income has been added into the database");
+    const resIncome = await client.query('SELECT * FROM income ORDER BY id DESC LIMIT 1;');
+    const resExpense = await client.query('SELECT * FROM expense ORDER BY id DESC LIMIT 1;');
+    const resInc = resIncome.rows;
+    const resExp = resExpense.rows;
+    res.json({resInc, resExp});
+    console.log(resInc)
+    console.log(resExp)
   } catch (err){
     console.log("An Error has occured", err);
   }

@@ -1,10 +1,3 @@
--- Create main sql table that will have both income and expenses
-CREATE TABLE main (
-    id SERIAL NOT NULL PRIMARY KEY,
-    total_income money,
-    total_expense money
-);
-
 -- Create table that has only income
 CREATE TABLE income (
     id SERIAL NOT NULL PRIMARY KEY,
