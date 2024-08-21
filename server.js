@@ -43,9 +43,11 @@ app.post("/api/data/income", async (req,res) => { // This will be the add income
   const request = req.body;
   console.log(request);
   try {
-    const res = await client.query('INSERT INTO income (date, total_income, side_hustle_income, stock_income, other) VALUES ($1, $2, $3, $4, $5)', [request.date, request.totalincome, request.sidehustleincome, request.stockincome, request.other]);
+    const response = await client.query('INSERT INTO income (date, total_income, side_hustle_income, stock_income, other) VALUES ($1, $2, $3, $4, $5)', [request.date, request.totalincome, request.sidehustleincome, request.stockincome, request.other]);
+    res.sendStatus(200);
     console.log("Income has been added into the database");
   } catch (err){
+    res.sendStatus(500);
     console.log("An Error has occured", err);
   }
   })  
@@ -54,9 +56,11 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
   const request = req.body;
   console.log(request);
   try {
-    const res = await client.query('INSERT INTO expense (date, total_expense, housing, food, transportation, insurance, other) VALUES ($1, $2, $3, $4, $5, $6, $7)', [request.date, request.totalexpense, request.housing, request.food, request.transportation, request.insurance, request.other]);
+    const response = await client.query('INSERT INTO expense (date, total_expense, housing, food, transportation, insurance, other) VALUES ($1, $2, $3, $4, $5, $6, $7)', [request.date, request.totalexpense, request.housing, request.food, request.transportation, request.insurance, request.other]);
+    res.sendStatus(200);
     console.log("Expenses has been added into the database");
   } catch (err){
+    res.sendStatus(500);
     console.log("An Error has occured", err);
   }
   })  
@@ -71,6 +75,7 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
       console.log(response.rows);
       res.json(response.rows);
     } catch (err){
+      res.sendStatus(500);
       console.log("An Error has occured", err);
     }
     }) 
@@ -82,9 +87,10 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
       const response = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
       console.log("Database has looked up the 2 dates");
       console.log("Data returned from database");
-      console.log(res.rows);
+      console.log(response.rows);
       res.json(response.rows);
     } catch (err){
+      res.sendStatus(500);
       console.log("An Error has occured", err);
     }
     }) 
@@ -101,22 +107,10 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
         const resExp = resExpense.rows;
         res.json({resInc, resExp});
       } catch (err){
+        res.sendStatus(500);
         console.log("An Error has occured", err);
       }
       }) 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       /*app.get("/test", async (req,res) => {         // Save this just to test if the database is down
 
