@@ -24,7 +24,7 @@ const client = new Client({
 
 await client.connect()
  
-app.get("/api/data", async (req,res) => { // This will be the route that is called when the page is first opened. It will display that last total income and total expense entered into the app
+app.get("/api/data", async (req, res, next) => { // This will be the route that is called when the page is first opened. It will display that last total income and total expense entered into the app
   
   try {
     const resIncome = await client.query('SELECT * FROM income ORDER BY id DESC LIMIT 1;');
@@ -35,11 +35,12 @@ app.get("/api/data", async (req,res) => { // This will be the route that is call
     console.log(resInc)
     console.log(resExp)
   } catch (err){
+    next(err)
     console.log("An Error has occured", err);
   }
   })  
 
-app.post("/api/data/income", async (req,res) => { // This will be the add income route
+app.post("/api/data/income", async (req, res, next) => { // This will be the add income route
   const request = req.body;
   console.log(request);
   try {
@@ -47,12 +48,12 @@ app.post("/api/data/income", async (req,res) => { // This will be the add income
     res.sendStatus(200);
     console.log("Income has been added into the database");
   } catch (err){
-    res.sendStatus(500);
+    next(err)
     console.log("An Error has occured", err);
   }
   })  
 
-app.post("/api/data/expense", async (req,res) => { // This will be the expense route
+app.post("/api/data/expense", async (req, res, next) => { // This will be the expense route
   const request = req.body;
   console.log(request);
   try {
@@ -60,12 +61,12 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
     res.sendStatus(200);
     console.log("Expenses has been added into the database");
   } catch (err){
-    res.sendStatus(500);
+    next(err)
     console.log("An Error has occured", err);
   }
   })  
 
-  app.post("/api/data/income/period", async (req,res) => { 
+  app.post("/api/data/income/period", async (req, res, next) => { 
     const request = req.body;
     console.log(request);
     try {
@@ -75,12 +76,12 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
       console.log(response.rows);
       res.json(response.rows);
     } catch (err){
-      res.sendStatus(500);
+      next(err)
       console.log("An Error has occured", err);
     }
     }) 
 
-  app.post("/api/data/expense/period", async (req,res) => { 
+  app.post("/api/data/expense/period", async (req, res, next) => { 
     const request = req.body;
     console.log(request);
     try {
@@ -90,12 +91,12 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
       console.log(response.rows);
       res.json(response.rows);
     } catch (err){
-      res.sendStatus(500);
+      next(err)
       console.log("An Error has occured", err);
     }
     }) 
 
-    app.post("/api/data/income-expense/period", async (req,res) => { 
+    app.post("/api/data/income-expense/period", async (req, res, next) => { 
       const request = req.body;
       console.log(request);
       try {
@@ -107,26 +108,15 @@ app.post("/api/data/expense", async (req,res) => { // This will be the expense r
         const resExp = resExpense.rows;
         res.json({resInc, resExp});
       } catch (err){
-        res.sendStatus(500);
+        next(err)
         console.log("An Error has occured", err);
       }
       }) 
 
-      /*app.get("/test", async (req,res) => {         // Save this just to test if the database is down
-
-  try {
-    const res = await client.query('SELECT * FROM testing WHERE id = $1', [1])
-    const result = res.rows;
-    console.log(result);
-  } catch (err){
-    console.log("An Error has occured", err);
-  }
-    
-    //const res = await client.query('SELECT $1::text as message', ['Hello world!'])
-    //console.log(res.rows[0].message) // Hello world!
-    //await client.end() You use this to close the connection to the database
-}) */
-
+      app.use((err, req, res, next) => {
+        console.error(err.stack);
+        res.status(500).json({ message: 'Internal Server Error' });
+    });
 
 app.listen(port, () => {
     console.log(`Server live on port ${port}`)
