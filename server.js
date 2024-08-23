@@ -40,6 +40,21 @@ app.get("/api/data", async (req, res, next) => { // This will be the route that 
   }
   })  
 
+  app.get("/api/data/period/month", async (req, res, next) => { // This route will be to show data for the entire month
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    try {
+      const lookUpIncome = await client.query('SELECT * FROM income WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
+      const lookUpExpense = await client.query('SELECT * FROM expense WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
+      const resInc = lookUpIncome.rows;
+      const resExp = lookUpExpense.rows;
+      res.json({resInc, resExp});
+    } catch (err){
+      next(err)
+      console.log("An Error has occured", err);
+    }
+    }) 
+
 app.post("/api/data/income", async (req, res, next) => { // This will be the add income route
   const request = req.body;
   console.log(request);
