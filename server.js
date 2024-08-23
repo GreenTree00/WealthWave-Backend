@@ -24,7 +24,7 @@ const client = new Client({
 
 await client.connect()
  
-app.get("/api/data", async (req, res, next) => { // This will be the route that is called when the page is first opened. It will display that last total income and total expense entered into the app
+app.get("/api/data/period/all", async (req, res, next) => { // This will be the route that is called when the page is first opened. It will display that last total income and total expense entered into the app
   
   try {
     const resIncome = await client.query('SELECT * FROM income ORDER BY id DESC LIMIT 1;');
@@ -42,12 +42,12 @@ app.get("/api/data", async (req, res, next) => { // This will be the route that 
 
   app.get("/api/data/period/month", async (req, res, next) => { // This route will be to show data for the entire month
     const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
+    const currentMonth = new Date().getMonth() + 1;
     try {
-      const lookUpIncome = await client.query('SELECT * FROM income WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
-      const lookUpExpense = await client.query('SELECT * FROM expense WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
-      const resInc = lookUpIncome.rows;
-      const resExp = lookUpExpense.rows;
+      const resIncome = await client.query('SELECT (date, total_income) FROM income WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
+      const resExpense = await client.query('SELECT (date, total_expense) FROM expense WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
+      const resInc = resIncome.rows;
+      const resExp = resExpense.rows;
       res.json({resInc, resExp});
     } catch (err){
       next(err)
