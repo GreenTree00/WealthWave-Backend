@@ -44,8 +44,8 @@ app.get("/api/data/period/all", async (req, res, next) => { // This will be the 
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
     try {
-      const resIncome = await client.query('SELECT (date, total_income) FROM income WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
-      const resExpense = await client.query('SELECT (date, total_expense) FROM expense WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
+      const resIncome = await client.query('SELECT (total_income) FROM income WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
+      const resExpense = await client.query('SELECT (total_expense) FROM expense WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
       const resInc = resIncome.rows;
       const resExp = resExpense.rows;
       res.json({resInc, resExp});
