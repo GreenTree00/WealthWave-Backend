@@ -12,12 +12,13 @@ CREATE TABLE income (
 CREATE TABLE expense (
     id SERIAL NOT NULL PRIMARY KEY,
     date DATE,
-    total_expense money,
     housing money,
     food money,
     transportation money,
     insurance money,
-    other money
+    entertainment money,
+    other money,
+    total_expense money
 );
 
 
