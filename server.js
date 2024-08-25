@@ -59,7 +59,7 @@ app.post("/api/data/income", async (req, res, next) => { // This will be the add
   const request = req.body;
   console.log(request);
   try {
-    const response = await client.query('INSERT INTO income (date, total_income, side_hustle_income, stock_income, other) VALUES ($1, $2, $3, $4, $5)', [request.date, request.totalincome, request.sidehustleincome, request.stockincome, request.other]);
+    const response = await client.query('INSERT INTO income (date, job_income, side_hustle_income, stock_income, other, total_income) VALUES ($1, $2, $3, $4, $5, $6)', [request.date, request.jobincome, request.sidehustleincome, request.stockincome, request.other, request.totalincome]);
     res.sendStatus(200);
     console.log("Income has been added into the database");
   } catch (err){
