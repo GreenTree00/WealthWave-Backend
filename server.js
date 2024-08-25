@@ -72,7 +72,7 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
   const request = req.body;
   console.log(request);
   try {
-    const response = await client.query('INSERT INTO expense (date, total_expense, housing, food, transportation, insurance, other) VALUES ($1, $2, $3, $4, $5, $6, $7)', [request.date, request.totalexpense, request.housing, request.food, request.transportation, request.insurance, request.other]);
+    const response = await client.query('INSERT INTO expense (date, housing, food, transportation, insurance, entertainment, other, total_expense) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [request.date, request.housing, request.food, request.transportation, request.insurance, request.entertainment, request.other, request.totalexpense]);
     res.sendStatus(200);
     console.log("Expenses has been added into the database");
   } catch (err){
