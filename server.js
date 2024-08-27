@@ -59,7 +59,7 @@ app.post("/api/data/income", async (req, res, next) => { // This will be the add
   const request = req.body;
   console.log(request);
   try {
-    const response = await client.query('INSERT INTO income (date, job_income, side_hustle_income, stock_income, other, total_income) VALUES ($1, $2, $3, $4, $5, $6)', [request.date, request.jobincome, request.sidehustleincome, request.stockincome, request.other, request.totalincome]);
+    const response = await client.query('INSERT INTO income (date, job_income, side_hustle_income, stock_income, other, total_income) VALUES ($1, $2, $3, $4, $5, $6)', [request.date, request.jobincome.replace(/[\$,]/g, ''), request.sidehustleincome.replace(/[\$,]/g, ''), request.stockincome.replace(/[\$,]/g, ''), request.other.replace(/[\$,]/g, ''), request.totalincome.replace(/[\$,]/g, '')]);
     res.sendStatus(200);
     console.log("Income has been added into the database");
   } catch (err){
@@ -72,7 +72,7 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
   const request = req.body;
   console.log(request);
   try {
-    const response = await client.query('INSERT INTO expense (date, housing, food, transportation, insurance, entertainment, other, total_expense) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [request.date, request.housing, request.food, request.transportation, request.insurance, request.entertainment, request.other, request.totalexpense]);
+    const response = await client.query('INSERT INTO expense (date, housing, food, transportation, insurance, entertainment, other, total_expense) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [request.date, request.housing.replace(/[\$,]/g, ''), request.food.replace(/[\$,]/g, ''), request.transportation.replace(/[\$,]/g, ''), request.insurance.replace(/[\$,]/g, ''), request.entertainment.replace(/[\$,]/g, ''), request.other.replace(/[\$,]/g, ''), request.totalexpense.replace(/[\$,]/g, '')]);
     res.sendStatus(200);
     console.log("Expenses has been added into the database");
   } catch (err){
