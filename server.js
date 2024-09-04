@@ -136,22 +136,6 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
     }
     }) 
 
-    app.post("/api/data/income/period/table", async (req, res, next) => {   // this route returns the data from income lookup for table data
-      const request = req.body;
-      console.log(request);
-      try {
-        const response = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
-        console.log("Database has looked up the 2 dates");
-        console.log("Data returned from database");
-        console.log(response.rows);
-        const resInc = response.rows;
-        res.json(resInc);
-      } catch (err){
-        next(err)
-        console.log("An Error has occured", err);
-      }
-      }) 
-
   app.post("/api/data/expense/period", async (req, res, next) => { // this route returns the data from expense lookup
     const request = req.body;
     console.log(request);
@@ -171,22 +155,6 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
       console.log("An Error has occured", err);
     }
     }) 
-
-    app.post("/api/data/expense/period/table", async (req, res, next) => { // this route returns the data from expense lookup for table data
-      const request = req.body;
-      console.log(request);
-      try {
-        const response = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
-        console.log("Database has looked up the 2 dates");
-        console.log("Data returned from database");
-        console.log(response.rows);
-        const resExp = response.rows;
-        res.json(resExp);    
-      } catch (err){
-        next(err)
-        console.log("An Error has occured", err);
-      }
-      }) 
 
     app.post("/api/data/income-expense/period", async (req, res, next) => { // this route returns the data from income, and expense lookup
       const request = req.body;
@@ -213,22 +181,6 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
       }
       }) 
 
-      app.post("/api/data/income-expense/period/table", async (req, res, next) => { // this route returns the data from income, and expense lookup to table
-        const request = req.body;
-        console.log(request);
-        try {
-          const resIncome = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
-          const resExpense = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
-          console.log(resIncome.rows)
-          console.log(resExpense.rows)
-          const resInc = resIncome.rows;
-          const resExp = resExpense.rows;
-          res.json({resInc, resExp});   
-        } catch (err){
-          next(err)
-          console.log("An Error has occured", err);
-        }
-        }) 
 
       app.use((err, req, res, next) => {
         console.error(err.stack);
