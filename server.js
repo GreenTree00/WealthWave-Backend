@@ -6,11 +6,11 @@ import cors from "cors";
 
 const app = express();
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 dotenv.config();
 
-app.use(cors()) //enables cors for all requests
+app.use(cors()); //enables cors for all requests
 
 const port = process.env.PORT || 3000;
 const { Client } = pg
@@ -20,7 +20,7 @@ const client = new Client({
     host: process.env.PG_HOST,
     port: process.env.PG_PORT,
     database: process.env.PG_DATABASE,
-  })
+  });
 
 await client.connect()
  
@@ -38,7 +38,7 @@ app.get("/api/data/period/all", async (req, res, next) => { // This will be the 
     next(err)
     console.log("An Error has occured", err);
   }
-  })  
+  });  
 
   app.get("/api/data/period/month", async (req, res, next) => { // This route will be to show data for the entire month
     const currentYear = new Date().getFullYear();
@@ -63,7 +63,7 @@ app.get("/api/data/period/all", async (req, res, next) => { // This will be the 
       next(err)
       console.log("An Error has occured", err);
     }
-    }) 
+    }); 
 
     app.get("/api/data/period/month/table", async (req, res, next) => { // This route will be to show data for the entire month on table
       const currentYear = new Date().getFullYear();
@@ -88,7 +88,7 @@ app.get("/api/data/period/all", async (req, res, next) => { // This will be the 
         next(err)
         console.log("An Error has occured", err);
       }
-      }) 
+      });
 
 app.post("/api/data/income", async (req, res, next) => { // This will be the add income route
   const request = req.body;
@@ -101,7 +101,7 @@ app.post("/api/data/income", async (req, res, next) => { // This will be the add
     next(err)
     console.log("An Error has occured", err);
   }
-  })  
+  });  
 
 app.post("/api/data/expense", async (req, res, next) => { // This will be the expense route
   const request = req.body;
@@ -114,7 +114,7 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
     next(err)
     console.log("An Error has occured", err);
   }
-  })  
+  });  
 
   app.post("/api/data/income/period", async (req, res, next) => {   // this route returns the data from income lookup
     const request = req.body;
@@ -134,7 +134,7 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
       next(err)
       console.log("An Error has occured", err);
     }
-    })
+    });
     
     app.post("/api/data/income/period/table", async (req, res, next) => {   // this route returns the data from income table
       const request = req.body;
@@ -148,7 +148,7 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
         next(err)
         console.log("An Error has occured", err);
       }
-      })
+      });
 
   app.post("/api/data/expense/period", async (req, res, next) => { // this route returns the data from expense lookup
     const request = req.body;
@@ -168,9 +168,9 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
       next(err)
       console.log("An Error has occured", err);
     }
-    }) 
+    }); 
 
-    app.post("/api/data/expense/period/table", async (req, res, next) => {   // this route returns the data from income table
+    app.post("/api/data/expense/period/table", async (req, res, next) => {   // this route returns the data for expense table
       const request = req.body;
       console.log(request);
       try {
@@ -182,7 +182,7 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
         next(err)
         console.log("An Error has occured", err);
       }
-      })
+      });
 
     app.post("/api/data/income-expense/period", async (req, res, next) => { // this route returns the data from income, and expense lookup
       const request = req.body;
@@ -207,7 +207,24 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
         next(err)
         console.log("An Error has occured", err);
       }
-      }) 
+      });
+
+      app.post("/api/data/income-expense/period/table", async (req, res, next) => { // this route returns the data from income, and expense for table
+        const request = req.body;
+        console.log(request);
+        try {
+          const resIncome = await client.query('SELECT * FROM income WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+          const resExpense = await client.query('SELECT * FROM expense WHERE date >= $1 AND date < $2', [request.firstdate, request.seconddate]);    
+          console.log(resIncome.rows)
+          console.log(resExpense.rows)
+          const resInc = resIncome.rows;
+          const resExp = resExpense.rows;
+          res.json({resInc, resExp});   
+        } catch (err){
+          next(err)
+          console.log("An Error has occured", err);
+        }
+        }); 
 
 
       app.use((err, req, res, next) => {
@@ -217,4 +234,4 @@ app.post("/api/data/expense", async (req, res, next) => { // This will be the ex
 
 app.listen(port, () => {
     console.log(`Server live on port ${port}`)
-  })
+  });
