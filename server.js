@@ -73,13 +73,13 @@ app.get("/api/data/period/all", async (req, res, next) => { // This will be the 
         const resExpense = await client.query('SELECT * FROM expense WHERE EXTRACT(YEAR FROM date) = $1 AND EXTRACT(MONTH FROM date) = $2;', [currentYear, currentMonth])
         const resInc = resIncome.rows.map((item) => {
           return (
-              {date: item.date, type: "Income", value: Number(item.total_income)
+              {id:item.id, date: item.date, type: "Income", value: Number(item.total_income)
               }
           )
         })
         const resExp = resExpense.rows.map((item) => {
           return (
-              {date: item.date, type: "Expense", value: Number(item.total_expense)
+              {id:item.id, date: item.date, type: "Expense", value: Number(item.total_expense)
               }
           )
         });
