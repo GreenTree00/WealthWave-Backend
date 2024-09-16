@@ -69,4 +69,30 @@ router.get("/api/data/period/all", async (req, res, next) => { // This will be t
         }
         });
 
+      router.get("/api/data/income/:id", async (req, res, next) => {
+        let id = req.params.id
+        console.log(id);
+        try {
+          const resIncome = await client.query('SELECT * FROM income WHERE id = $1', [id]);
+          const resInc = resIncome.rows;
+          res.json({resInc});
+        } catch (err) {
+          next(err)
+          console.log("An Error has occured", err);
+        }
+      })
+
+      router.get("/api/data/expense/:id", async (req, res, next) => {
+        let id = req.params.id
+        console.log(id);
+        try {
+          const resExpense = await client.query('SELECT * FROM expense WHERE id = $1', [id]);
+          const resExp = resExpense.rows;
+          res.json({resExp});
+        } catch (err) {
+          next(err)
+          console.log("An Error has occured", err);
+        }
+      })
+
 export default router;
