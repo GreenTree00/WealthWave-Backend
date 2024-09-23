@@ -5,6 +5,8 @@ import pg from "pg";
 import cors from "cors";
 import getRoutes from "./routes/getRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import patchRoutes from "./routes/patchRoutes.js";
+import deleteRoutes from "./routes/deleteRoutes.js";
 
 const app = express();
 
@@ -29,6 +31,10 @@ await client.connect()
 app.use(getRoutes);
 
 app.use(postRoutes);
+
+app.use(patchRoutes);
+
+app.use(deleteRoutes);
 
 app.listen(port, () => {
     console.log(`Server live on port ${port}`)
