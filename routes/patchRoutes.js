@@ -20,7 +20,6 @@ router.patch("/api/data/income/:id", async (req, res, next) => {         // this
 router.patch("/api/data/expense/:id", async (req, res, next) => {         // this route will update the expense
     let request = req.body;
     let id = req.params.id
-    console.log(id);
     try {
         const resExpense = await client.query('UPDATE expense SET date = $2, housing = $3, food = $4, transportation = $5, insurance = $6, entertainment = $7, other = $8, total_expense = $9 WHERE id = $1;', [id, request.date, request.housing.replace(/[\$,]/g, ''), request.food.replace(/[\$,]/g, ''), request.transportation.replace(/[\$,]/g, ''), request.insurance.replace(/[\$,]/g, ''), request.entertainment.replace(/[\$,]/g, ''), request.other.replace(/[\$,]/g, ''), request.total_expense.replace(/[\$,]/g, '')]);
         const resExp = resExpense.rows;
