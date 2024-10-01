@@ -11,8 +11,6 @@ router.get("/api/data/period/all", async (req, res, next) => { // This will be t
       const resInc = resIncome.rows;
       const resExp = resExpense.rows;
       res.json({resInc, resExp});
-      console.log(resInc)
-      console.log(resExp)
     } catch (err){
       next(err)
       console.log("An Error has occured", err);
@@ -71,7 +69,6 @@ router.get("/api/data/period/all", async (req, res, next) => { // This will be t
 
       router.get("/api/data/income/:id", async (req, res, next) => {
         let id = req.params.id
-        console.log(id);
         try {
           const resIncome = await client.query('SELECT * FROM income WHERE id = $1', [id]);
           const resInc = resIncome.rows;
@@ -84,7 +81,6 @@ router.get("/api/data/period/all", async (req, res, next) => { // This will be t
 
       router.get("/api/data/expense/:id", async (req, res, next) => {
         let id = req.params.id
-        console.log(id);
         try {
           const resExpense = await client.query('SELECT * FROM expense WHERE id = $1', [id]);
           const resExp = resExpense.rows;
