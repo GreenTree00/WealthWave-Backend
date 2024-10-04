@@ -9,18 +9,18 @@ router.post("/api/data/income", async (req, res) => { // This will be the add in
       const response = await client.query('INSERT INTO income (date, job_income, side_hustle_income, stock_income, other, total_income) VALUES ($1, $2, $3, $4, $5, $6)', [request.date, request.jobincome.replace(/[\$,]/g, ''), request.sidehustleincome.replace(/[\$,]/g, ''), request.stockincome.replace(/[\$,]/g, ''), request.other.replace(/[\$,]/g, ''), request.totalincome.replace(/[\$,]/g, '')]);
       res.sendStatus(200);
     } catch (err){
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ error: err.message });   
       console.log("An Error has occured", err);
     }
     });  
   
-    router.post("/api/data/expense", async (req, res, next) => { // This will be the expense route
+    router.post("/api/data/expense", async (req, res) => { // This will be the expense route
     const request = req.body;
     try {
       const response = await client.query('INSERT INTO expense (date, housing, food, transportation, insurance, entertainment, other, total_expense) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [request.date, request.housing.replace(/[\$,]/g, ''), request.food.replace(/[\$,]/g, ''), request.transportation.replace(/[\$,]/g, ''), request.insurance.replace(/[\$,]/g, ''), request.entertainment.replace(/[\$,]/g, ''), request.other.replace(/[\$,]/g, ''), request.totalexpense.replace(/[\$,]/g, '')]);
       res.sendStatus(200);
     } catch (err){
-      next(err)
+      res.status(400).json({ error: err.message });
       console.log("An Error has occured", err);
     }
     });  
