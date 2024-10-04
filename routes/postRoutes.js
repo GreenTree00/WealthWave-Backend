@@ -3,13 +3,13 @@ import client from "../server.js";
 
 const router = express.Router();
 
-router.post("/api/data/income", async (req, res, next) => { // This will be the add income route
+router.post("/api/data/income", async (req, res) => { // This will be the add income route
     const request = req.body;
     try {
       const response = await client.query('INSERT INTO income (date, job_income, side_hustle_income, stock_income, other, total_income) VALUES ($1, $2, $3, $4, $5, $6)', [request.date, request.jobincome.replace(/[\$,]/g, ''), request.sidehustleincome.replace(/[\$,]/g, ''), request.stockincome.replace(/[\$,]/g, ''), request.other.replace(/[\$,]/g, ''), request.totalincome.replace(/[\$,]/g, '')]);
       res.sendStatus(200);
     } catch (err){
-      next(err)
+      res.status(400).json({ error: err.message });
       console.log("An Error has occured", err);
     }
     });  
